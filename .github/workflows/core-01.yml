@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write
 
 jobs:
   core:
@@ -85,3 +86,26 @@ jobs:
 
       - name: Regression check of the BASE-01 checks
         run: '"$GODOT" --headless --path . --script res://tests/base/base_test.gd'
+
+      - name: Report the core log in the pull request on failure
+        if: failure()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |-
+          set -uo pipefail
+          log="$RUNNER_TEMP/godot-core.log"
+          body="CORE-01 debug log:"
+          if [[ -s "$log" ]]; then
+            body="$body
+
+          \`\`\`
+          $(tail -n 60 "$log" | tr -d '\r')
+          \`\`\`"
+          else
+            body="$body no log file was written"
+          fi
+          if [[ -n "${PR_NUMBER:-}" ]]; then
+            gh pr comment "$PR_NUMBER" --body "$body"
+          fi
