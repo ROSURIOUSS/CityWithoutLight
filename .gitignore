@@ -1,0 +1,15 @@
+# Godot 4 project cache and generated translation resources.
+.godot/
+*.translation
+
+# Local builds and export credentials; keep source assets, .import, and .uid files.
+/build/
+/dist/
+/export/
+/exports/
+/out/
+/export_credentials.cfg
+
+# Operating system files.
+.DS_Store
+Thumbs.db
