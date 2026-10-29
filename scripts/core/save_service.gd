@@ -121,9 +121,9 @@ func _parse_snapshot(text: String, path: String) -> Dictionary:
 
 
 ## Only `user://` is writable and `..` is refused, so a save cannot escape the user folder.
+## `String.is_absolute_path()` is not used here: in Godot 4.4 it also reports `user://`
+## and `res://` as absolute paths.
 func _is_user_path(path: String) -> bool:
-	if path.begins_with("res://") or path.is_absolute_path():
-		return false
 	if not path.begins_with("user://"):
 		return false
 	return path.length() > "user://".length() and not path.contains("..")

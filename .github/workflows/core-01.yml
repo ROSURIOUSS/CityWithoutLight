@@ -78,9 +78,11 @@ jobs:
             tail -n 4 "$log" | sed 's/\r$//; s/^/::error title=CORE-01 log::/'
             exit 1
           fi
-          pattern='(^|[[:space:]])(SCRIPT ERROR|USER ERROR|ERROR):'
-          if grep -qE "$pattern" "$log"; then
-            grep -E "$pattern" "$log" | head -20 | sed 's/\r$//; s/^/::error title=CORE-01 error::/'
+          # The corrupted-file tests intentionally trigger Godot ERROR logs, so only a
+          # GDScript failure is treated as a second failure signal; the exit code of the
+          # test scene is the primary result.
+          if grep -qE '(^|[[:space:]])SCRIPT ERROR:' "$log"; then
+            grep -E '(^|[[:space:]])SCRIPT ERROR:' "$log" | head -20 | sed 's/\r$//; s/^/::error title=CORE-01 script error::/'
             exit 1
           fi
 
