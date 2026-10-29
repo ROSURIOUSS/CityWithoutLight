@@ -94,7 +94,7 @@ func _test_flags() -> void:
 func _test_relations() -> void:
 	_game_state.reset_new_game()
 	_signal_count = 0
-	var first := _game_state.change_relation("npc.mira", 1)
+	var first: int = _game_state.change_relation("npc.mira", 1)
 	_expect_eq(first, 1, "change_relation must return the new total.")
 	_expect_eq(_signal_count, 1, "A relation change must emit one signal.")
 	_expect_eq(_game_state.change_relation("npc.mira", 0), 1, "A zero change must keep the value.")
