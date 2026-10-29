@@ -90,7 +90,7 @@ jobs:
         run: '"$GODOT" --headless --path . --script res://tests/base/base_test.gd'
 
       - name: Report the core log in the pull request on failure
-        if: failure()
+        if: always()
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -103,7 +103,7 @@ jobs:
             body="$body
 
           \`\`\`
-          $(tail -n 60 "$log" | tr -d '\r')
+          $(tail -n 15 "$log" | tr -d '\r')
           \`\`\`"
           else
             body="$body no log file was written"
